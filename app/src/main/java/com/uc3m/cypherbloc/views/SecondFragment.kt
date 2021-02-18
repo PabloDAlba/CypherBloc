@@ -1,4 +1,4 @@
-package com.uc3m.cypherbloc
+package com.uc3m.cypherbloc.views
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.navigation.fragment.findNavController
+import com.uc3m.cypherbloc.R
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
