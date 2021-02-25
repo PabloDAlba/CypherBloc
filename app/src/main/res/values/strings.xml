@@ -7,6 +7,8 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="hello_first_fragment">Aqui irá el inicio de sesión</string>
+    <string name="hello_second_fragment">Aquí aparecerán las notas</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">COSAS PARA NOTAS</string>
 </resources>

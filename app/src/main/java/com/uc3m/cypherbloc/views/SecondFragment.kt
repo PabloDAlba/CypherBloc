@@ -7,13 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.uc3m.cypherbloc.R
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
 class SecondFragment : Fragment() {
-
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
@@ -28,5 +28,10 @@ class SecondFragment : Fragment() {
         view.findViewById<Button>(R.id.button_second).setOnClickListener {
             findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
         }
+
+        view.findViewById<FloatingActionButton>(R.id.floatingActionButton).setOnClickListener {
+            findNavController().navigate(R.id.action_SecondFragment_to_addNotesFragment22)
+        }
+
     }
 }
