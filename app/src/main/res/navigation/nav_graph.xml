@@ -32,5 +32,9 @@
         android:id="@+id/addNotesFragment2"
         android:name="com.uc3m.cypherbloc.AddNotesFragment"
         android:label="fragment_add_notes"
-        tools:layout="@layout/fragment_add_notes" />
+        tools:layout="@layout/fragment_add_notes" >
+        <action
+            android:id="@+id/action_addNotesFragment2_to_SecondFragment"
+            app:destination="@id/SecondFragment" />
+    </fragment>
 </navigation>

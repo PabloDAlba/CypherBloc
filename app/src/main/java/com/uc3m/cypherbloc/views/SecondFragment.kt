@@ -6,32 +6,48 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.LinearLayout
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.uc3m.cypherbloc.R
+import com.uc3m.cypherbloc.databinding.FragmentAddNotesBinding
+import com.uc3m.cypherbloc.databinding.FragmentSecondBinding
+import com.uc3m.cypherbloc.models.Notes
+import com.uc3m.cypherbloc.viewModels.NotesViewModel
 
-/**
- * A simple [Fragment] subclass as the second destination in the navigation.
- */
+
 class SecondFragment : Fragment() {
+
+    private lateinit var binding: FragmentSecondBinding
+    private lateinit var notesViewModel: NotesViewModel
+
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_second, container, false)
-    }
+        binding = FragmentSecondBinding.inflate(inflater,container,false)
+        val view = binding.root
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        val adapter = NoteAdapter()
+        val recyclerView = binding.recyclerView
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        view.findViewById<Button>(R.id.button_second).setOnClickListener {
+        notesViewModel = ViewModelProvider(this).get(NotesViewModel::class.java)
+        notesViewModel.readAll.observe(viewLifecycleOwner, {notes -> adapter.setData(notes)})
+
+        binding.buttonSecond.setOnClickListener{
             findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
         }
 
-        view.findViewById<FloatingActionButton>(R.id.floatingActionButton).setOnClickListener {
+        binding.floatingActionButton.setOnClickListener{
             findNavController().navigate(R.id.action_SecondFragment_to_addNotesFragment22)
         }
 
+
+        return view
     }
 }
