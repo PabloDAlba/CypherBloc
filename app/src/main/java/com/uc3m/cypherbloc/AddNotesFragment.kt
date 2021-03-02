@@ -19,18 +19,11 @@ class AddNotesFragment : Fragment() {
     private lateinit var  binding: FragmentAddNotesBinding
     private lateinit var notesViewModel: NotesViewModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        //return inflater.inflate(R.layout.fragment_add_notes, container, false)
         binding = FragmentAddNotesBinding.inflate(inflater, container, false)
         val view = binding.root
 
@@ -53,6 +46,7 @@ class AddNotesFragment : Fragment() {
         if(inputCheck(nombreNota,creadorNota,contenidoNota)){
             val note = Notes(nombreNota,creadorNota,contenidoNota)
             notesViewModel.addNote(note)
+            Toast.makeText(requireContext(), "Nota creada con exito", Toast.LENGTH_LONG).show()
             findNavController().navigate(R.id.action_addNotesFragment2_to_SecondFragment)
         }else{
             Toast.makeText(requireContext(), "Algún campo esta vacio",Toast.LENGTH_LONG).show()
@@ -60,6 +54,6 @@ class AddNotesFragment : Fragment() {
     }
 
     private fun inputCheck(nombreNota: String, creadorNota: String, contenidoNota: String): Boolean{
-        return(TextUtils.isEmpty(nombreNota) && TextUtils.isEmpty(creadorNota) && TextUtils.isEmpty(contenidoNota))
+        return!(TextUtils.isEmpty(nombreNota) || TextUtils.isEmpty(creadorNota) || TextUtils.isEmpty(contenidoNota))
     }
 }

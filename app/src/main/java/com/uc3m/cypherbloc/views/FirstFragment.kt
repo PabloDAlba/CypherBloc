@@ -22,10 +22,12 @@ class FirstFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentFirstBinding.inflate(inflater, container, false)
         val view = binding.root
-        return view
+
 
         binding.buttonFirst.setOnClickListener{
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
         }
+
+        return view
     }
 }

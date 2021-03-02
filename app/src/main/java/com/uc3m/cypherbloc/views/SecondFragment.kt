@@ -27,17 +27,20 @@ class SecondFragment : Fragment() {
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         binding = FragmentSecondBinding.inflate(inflater,container,false)
         val view = binding.root
 
+
         val adapter = NoteAdapter()
         val recyclerView = binding.recyclerView
+
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+
         notesViewModel = ViewModelProvider(this).get(NotesViewModel::class.java)
         notesViewModel.readAll.observe(viewLifecycleOwner, {notes -> adapter.setData(notes)})
+
 
         binding.buttonSecond.setOnClickListener{
             findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)

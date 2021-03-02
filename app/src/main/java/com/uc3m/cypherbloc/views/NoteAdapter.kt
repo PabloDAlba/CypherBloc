@@ -2,7 +2,6 @@ package com.uc3m.cypherbloc.views
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.uc3m.cypherbloc.databinding.RecyclerViewItemBinding
 import com.uc3m.cypherbloc.models.Notes
