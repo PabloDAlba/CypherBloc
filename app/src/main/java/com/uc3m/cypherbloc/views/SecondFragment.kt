@@ -17,6 +17,10 @@ import com.uc3m.cypherbloc.databinding.FragmentSecondBinding
 import com.uc3m.cypherbloc.models.Notes
 import com.uc3m.cypherbloc.viewModels.NotesViewModel
 
+enum class ProviderType {
+    BASIC,
+    GOOGLE
+}
 
 class SecondFragment : Fragment() {
 

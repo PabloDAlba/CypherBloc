@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1047992814961",
+    "firebase_url": "https://cypherbloc-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "cypherbloc",
+    "storage_bucket": "cypherbloc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1047992814961:android:b01fcd584b7ef4a03b3ad0",
+        "android_client_info": {
+          "package_name": "com.uc3m.cypherbloc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1047992814961-vm5bcl5r9fjc5sok2codgl3tnkdsblan.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXovQmI_MSpIcX9fhcEJiNgI4AdFrdYL8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1047992814961-vm5bcl5r9fjc5sok2codgl3tnkdsblan.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
