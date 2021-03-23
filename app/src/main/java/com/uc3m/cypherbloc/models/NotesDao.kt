@@ -1,10 +1,7 @@
 package com.uc3m.cypherbloc.models
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface NotesDao {
@@ -14,4 +11,9 @@ interface NotesDao {
 
     @Query( "SELECT * FROM notes_table")
     fun readAll(): LiveData<List<Notes>>
+
+    @Delete
+    suspend fun deleteNote(notes: Notes)
+
+
 }

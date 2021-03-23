@@ -30,7 +30,7 @@
     </fragment>
     <fragment
         android:id="@+id/addNotesFragment2"
-        android:name="com.uc3m.cypherbloc.AddNotesFragment"
+        android:name="com.uc3m.cypherbloc.views.AddNotesFragment"
         android:label="fragment_add_notes"
         tools:layout="@layout/fragment_add_notes" >
         <action

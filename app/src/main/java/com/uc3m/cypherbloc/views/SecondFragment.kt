@@ -46,6 +46,7 @@ class SecondFragment : Fragment() {
         notesViewModel.readAll.observe(viewLifecycleOwner, { notes -> adapter.setData(notes) })
 
 
+
         binding.buttonSecond.setOnClickListener {
             findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
         }

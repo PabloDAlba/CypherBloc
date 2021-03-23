@@ -15,6 +15,7 @@ class NotesViewModel(application: Application): AndroidViewModel(application) {
     val readAll: LiveData<List<Notes>>
     private val repository: NotesRepository
 
+
     init{
         val notesDao = NotesDatabase.getDatabase(application).notesDao()
         repository = NotesRepository(notesDao)
@@ -26,4 +27,12 @@ class NotesViewModel(application: Application): AndroidViewModel(application) {
             repository.addNote(notes)
         }
     }
+
+    fun deleteNote(notes: Notes) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteNote(notes)
+        }
+    }
+
+
 }
