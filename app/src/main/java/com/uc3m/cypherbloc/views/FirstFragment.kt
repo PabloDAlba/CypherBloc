@@ -92,8 +92,8 @@ class FirstFragment : Fragment() {
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build()
-
-            val googleClient: GoogleSignInClient = GoogleSignIn.getClient(MainActivity(), googleConf)
+            val mainActivity: MainActivity = activity as MainActivity
+            val googleClient: GoogleSignInClient = GoogleSignIn.getClient(mainActivity, googleConf)
             //logout current account
             googleClient.signOut()
 

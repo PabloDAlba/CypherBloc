@@ -44,7 +44,7 @@ class AddNotesFragment : Fragment() {
         val contenidoNota = binding.ContenidoNota.text.toString()
 
         if(inputCheck(nombreNota,creadorNota,contenidoNota)){
-            
+
             val note = Notes(nombreNota,creadorNota,contenidoNota)
             notesViewModel.addNote(note)
             Toast.makeText(requireContext(), "Nota creada con exito", Toast.LENGTH_LONG).show()
