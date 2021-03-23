@@ -31,7 +31,7 @@ class SecondFragment : Fragment() {
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentSecondBinding.inflate(inflater,container,false)
+        binding = FragmentSecondBinding.inflate(inflater, container, false)
         val view = binding.root
 
 
@@ -43,18 +43,32 @@ class SecondFragment : Fragment() {
 
 
         notesViewModel = ViewModelProvider(this).get(NotesViewModel::class.java)
-        notesViewModel.readAll.observe(viewLifecycleOwner, {notes -> adapter.setData(notes)})
+        notesViewModel.readAll.observe(viewLifecycleOwner, { notes -> adapter.setData(notes) })
 
 
-        binding.buttonSecond.setOnClickListener{
+        binding.buttonSecond.setOnClickListener {
             findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
         }
 
-        binding.floatingActionButton.setOnClickListener{
+        binding.floatingActionButton.setOnClickListener {
             findNavController().navigate(R.id.action_SecondFragment_to_addNotesFragment22)
         }
-
-
+/**
+        // setup
+        val bundle: Bundle? = intent.extras
+        val email: String? = bundle?.getString(key: "email")
+        val provider: String? = bundle?.getString(key:"provider")
+        setup(email:email ?: "", provider:provider ?: "")
+*/
         return view
+    }
+
+    private fun setup(email: String, provider: String){
+      /*  title = "inicio"
+        binding.
+        providerTextView.text = provider
+
+        logOutButton.setOnclick
+*/
     }
 }
