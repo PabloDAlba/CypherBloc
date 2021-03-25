@@ -41,7 +41,7 @@ class AddNotesFragment : Fragment() {
 
     private fun insertDataToDatabase(){
         var nombreNota = binding.NombreNota.text.toString()
-        nombreNota = AESEncryptionDecryption().encrypt(context, nombreNota).toString()
+        //nombreNota = AESEncryptionDecryption().encrypt(context, nombreNota).toString()
         var creadorNota = binding.CreadorNota.text.toString()
         creadorNota = AESEncryptionDecryption().encrypt(context, creadorNota).toString()
         var contenidoNota = binding.ContenidoNota.text.toString()
