@@ -13,6 +13,7 @@ import com.uc3m.cypherbloc.R
 import com.uc3m.cypherbloc.databinding.FragmentAddNotesBinding
 import com.uc3m.cypherbloc.models.Notes
 import com.uc3m.cypherbloc.viewModels.NotesViewModel
+import com.uc3m.cypherbloc.models.AESEncryptionDecryption
 
 class AddNotesFragment : Fragment() {
 
@@ -39,9 +40,12 @@ class AddNotesFragment : Fragment() {
     }
 
     private fun insertDataToDatabase(){
-        val nombreNota = binding.NombreNota.text.toString()
-        val creadorNota = binding.CreadorNota.text.toString()
-        val contenidoNota = binding.ContenidoNota.text.toString()
+        var nombreNota = binding.NombreNota.text.toString()
+        nombreNota = AESEncryptionDecryption().encrypt(context, nombreNota).toString()
+        var creadorNota = binding.CreadorNota.text.toString()
+        creadorNota = AESEncryptionDecryption().encrypt(context, creadorNota).toString()
+        var contenidoNota = binding.ContenidoNota.text.toString()
+        contenidoNota = AESEncryptionDecryption().encrypt(context, contenidoNota).toString()
 
         if(inputCheck(nombreNota,creadorNota,contenidoNota)){
 
