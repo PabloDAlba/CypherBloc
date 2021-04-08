@@ -11,4 +11,5 @@
     <string name="hello_second_fragment">Aquí aparecerán las notas</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">COSAS PARA NOTAS</string>
+    <string name="user">user</string>
 </resources>

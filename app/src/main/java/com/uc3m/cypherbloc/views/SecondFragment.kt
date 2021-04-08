@@ -29,6 +29,7 @@ class SecondFragment : Fragment() {
 
     private lateinit var binding: FragmentSecondBinding
     private lateinit var notesViewModel: NotesViewModel
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -37,8 +38,11 @@ class SecondFragment : Fragment() {
         binding = FragmentSecondBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        val auth = FirebaseAuth.getInstance()
+
+        auth = FirebaseAuth.getInstance()
         val currentUser = auth.currentUser
+
+        binding.user.text = currentUser?.displayName
 
         val adapter = NoteAdapter()
         val recyclerView = binding.recyclerView

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.auth.FirebaseAuth
 import com.uc3m.cypherbloc.R
 import com.uc3m.cypherbloc.databinding.FragmentAddNotesBinding
 import com.uc3m.cypherbloc.models.Notes
@@ -19,7 +20,7 @@ class AddNotesFragment : Fragment() {
 
     private lateinit var  binding: FragmentAddNotesBinding
     private lateinit var notesViewModel: NotesViewModel
-
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,6 +28,11 @@ class AddNotesFragment : Fragment() {
     ): View? {
         binding = FragmentAddNotesBinding.inflate(inflater, container, false)
         val view = binding.root
+
+        auth = FirebaseAuth.getInstance()
+        val currentUser = auth.currentUser
+
+        binding.user.text = currentUser?.displayName
 
         notesViewModel = ViewModelProvider(this ).get(NotesViewModel::class.java)
 
@@ -44,14 +50,14 @@ class AddNotesFragment : Fragment() {
 
         val nombreNota = binding.NombreNota.text.toString()
         //nombreNota = AESEncryptionDecryption().encrypt(context, nombreNota).toString()
-        var creadorNota = binding.CreadorNota.text.toString()
-        creadorNota = AESEncryptionDecryption().encrypt(context, creadorNota, password).toString()
+        var creadorNota = auth.currentUser?.displayName.toString()
+        //creadorNota = AESEncryptionDecryption().encrypt(context, creadorNota, password).toString()
         var contenidoNota = binding.ContenidoNota.text.toString()
         contenidoNota = AESEncryptionDecryption().encrypt(context, contenidoNota, password).toString()
 
         if(inputCheck(nombreNota, creadorNota, contenidoNota)){
 
-            val note = Notes(nombreNota,creadorNota,contenidoNota)
+            val note = Notes(0,nombreNota,creadorNota,contenidoNota)
             notesViewModel.addNote(note)
             Toast.makeText(requireContext(), "Nota creada con exito", Toast.LENGTH_LONG).show()
             findNavController().navigate(R.id.action_addNotesFragment2_to_SecondFragment)

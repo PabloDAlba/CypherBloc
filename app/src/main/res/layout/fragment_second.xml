@@ -6,16 +6,37 @@
     android:layout_height="match_parent"
     tools:context=".views.SecondFragment">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/Theme.CypherBloc.PopupOverlay"
+        tools:ignore="MissingConstraints" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:layout_width="383dp"
-        android:layout_height="571dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="362dp"
+        android:layout_height="534dp"
+        app:layout_constraintBottom_toTopOf="@+id/button_second"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.444"
+        app:layout_constraintHorizontal_bias="0.489"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/user"
+        android:layout_width="339dp"
+        android:layout_height="23dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/user"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+        app:layout_constraintEnd_toEndOf="@+id/toolbar"
+        app:layout_constraintStart_toStartOf="@+id/toolbar"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.052" />
+        app:layout_constraintVertical_bias="0.19" />
 
     <Button
         android:id="@+id/button_second"
