@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.uc3m.cypherbloc.R
@@ -36,6 +37,8 @@ class SecondFragment : Fragment() {
         binding = FragmentSecondBinding.inflate(inflater, container, false)
         val view = binding.root
 
+        val auth = FirebaseAuth.getInstance()
+        val currentUser = auth.currentUser
 
         val adapter = NoteAdapter()
         val recyclerView = binding.recyclerView
@@ -50,7 +53,7 @@ class SecondFragment : Fragment() {
 
 
         binding.buttonSecond.setOnClickListener {
-            Firebase.auth.signOut()
+            auth.signOut()
             findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
         }
 

@@ -29,7 +29,7 @@ import java.lang.Exception
 class FirstFragment : Fragment() {
 
     private lateinit var binding: FragmentFirstBinding
-    private val GOOGLE_SIGN_IN = 100
+    //private val GOOGLE_SIGN_IN = 100
 
     // no sé qué es
     companion object {

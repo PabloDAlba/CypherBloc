@@ -40,14 +40,16 @@ class AddNotesFragment : Fragment() {
     }
 
     private fun insertDataToDatabase(){
-        var nombreNota = binding.NombreNota.text.toString()
+        val password = binding.Password.text.toString().toCharArray()
+
+        val nombreNota = binding.NombreNota.text.toString()
         //nombreNota = AESEncryptionDecryption().encrypt(context, nombreNota).toString()
         var creadorNota = binding.CreadorNota.text.toString()
-        creadorNota = AESEncryptionDecryption().encrypt(context, creadorNota).toString()
+        creadorNota = AESEncryptionDecryption().encrypt(context, creadorNota, password).toString()
         var contenidoNota = binding.ContenidoNota.text.toString()
-        contenidoNota = AESEncryptionDecryption().encrypt(context, contenidoNota).toString()
+        contenidoNota = AESEncryptionDecryption().encrypt(context, contenidoNota, password).toString()
 
-        if(inputCheck(nombreNota,creadorNota,contenidoNota)){
+        if(inputCheck(nombreNota, creadorNota, contenidoNota)){
 
             val note = Notes(nombreNota,creadorNota,contenidoNota)
             notesViewModel.addNote(note)
