@@ -11,6 +11,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.uc3m.cypherbloc.R
 import com.uc3m.cypherbloc.databinding.FragmentAddNotesBinding
 import com.uc3m.cypherbloc.databinding.FragmentSecondBinding
@@ -48,6 +50,7 @@ class SecondFragment : Fragment() {
 
 
         binding.buttonSecond.setOnClickListener {
+            Firebase.auth.signOut()
             findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
         }
 
