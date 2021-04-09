@@ -50,7 +50,7 @@ class AddNotesFragment : Fragment() {
 
         val nombreNota = binding.NombreNota.text.toString()
         //nombreNota = AESEncryptionDecryption().encrypt(context, nombreNota).toString()
-        var creadorNota = auth.currentUser?.displayName.toString()
+        var creadorNota = auth.currentUser?.email.toString()
         //creadorNota = AESEncryptionDecryption().encrypt(context, creadorNota, password).toString()
         var contenidoNota = binding.ContenidoNota.text.toString()
         contenidoNota = AESEncryptionDecryption().encrypt(context, contenidoNota, password).toString()

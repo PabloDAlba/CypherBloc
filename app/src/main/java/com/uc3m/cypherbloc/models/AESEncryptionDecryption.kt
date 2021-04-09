@@ -24,43 +24,47 @@ class AESEncryptionDecryption {
 
         //Creating manual password  -> secret key
 
-        //no sé si podemos poner esto aquí tal cual
         val salt = byteArrayOf(50, 111, 8, 53, 86, 35, -19, -47)
 
         val factory: SecretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1")
         val spec: KeySpec = PBEKeySpec(password, salt, 65536, 256)
         val tmp: SecretKey = factory.generateSecret(spec)
-        val secret: SecretKey = SecretKeySpec(tmp.encoded, "AES")
+        val key: SecretKey = SecretKeySpec(tmp.encoded, "AES")
 
         var cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
-        cipher.init(Cipher.ENCRYPT_MODE, secret)
+        cipher.init(Cipher.ENCRYPT_MODE, key)
 
         val iv = cipher.parameters.getParameterSpec(IvParameterSpec::class.java).iv
         val ciphertext = cipher.doFinal(strToEncrypt.toByteArray(charset("UTF-8")))
 
         // reinit cypher using param spec
         cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
-        cipher.init(Cipher.DECRYPT_MODE, secret, IvParameterSpec(iv))
 
+        cipher.init(Cipher.DECRYPT_MODE, key, IvParameterSpec(iv))
+
+        saveSecretKey(context, key)
+        saveInitializationVector(context, cipher.iv)
+
+        Toast.makeText(context, "dbg encrypted = [" + ciphertext.toString() + "]", Toast.LENGTH_LONG).show()
+
+        return ciphertext
 
       /*  val plainText = strToEncrypt.toByteArray(Charsets.UTF_8)
         val keygen = KeyGenerator.getInstance("AES")
         keygen.init(256)
         val key = keygen.generateKey()*/
-        saveSecretKey(context, secret)
+
       /*val cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING")
         cipher.init(Cipher.ENCRYPT_MODE, key)
         val cipherText = cipher.doFinal(plainText)*/
-        saveInitializationVector(context, cipher.iv)
+
 /*
         val sb = StringBuilder()
         for (b in cipherText) {
             sb.append(b.toChar())
         }
  */
-        Toast.makeText(context, "dbg encrypted = [" + ciphertext.toString() + "]", Toast.LENGTH_LONG).show()
 
-        return ciphertext
     }
 
     fun decrypt(context: Context, dataToDecrypt: ByteArray): ByteArray {
@@ -78,10 +82,10 @@ class AESEncryptionDecryption {
         return cipherText
     }
 
-    fun saveSecretKey(context: Context?, secretKey: SecretKey) {
+    fun saveSecretKey(context: Context?, key: SecretKey) {
         val baos = ByteArrayOutputStream()
         val oos = ObjectOutputStream(baos)
-        oos.writeObject(secretKey)
+        oos.writeObject(key)
         val strToSave =
             String(android.util.Base64.encode(baos.toByteArray(), android.util.Base64.DEFAULT))
         val sharedPref = PreferenceManager.getDefaultSharedPreferences(context)

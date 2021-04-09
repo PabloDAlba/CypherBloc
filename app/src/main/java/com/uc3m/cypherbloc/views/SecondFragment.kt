@@ -1,24 +1,19 @@
 package com.uc3m.cypherbloc.views
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.database.FirebaseDatabase
 import com.uc3m.cypherbloc.R
-import com.uc3m.cypherbloc.databinding.FragmentAddNotesBinding
 import com.uc3m.cypherbloc.databinding.FragmentSecondBinding
-import com.uc3m.cypherbloc.models.Notes
 import com.uc3m.cypherbloc.viewModels.NotesViewModel
+
 
 enum class ProviderType {
     BASIC,
@@ -32,8 +27,8 @@ class SecondFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSecondBinding.inflate(inflater, container, false)
         val view = binding.root
@@ -57,6 +52,10 @@ class SecondFragment : Fragment() {
 
 
         binding.buttonSecond.setOnClickListener {
+            //hace falta un flush() para borrar cookies pero no encuentro como hacerlo
+           /* val db = FirebaseDatabase.getInstance()
+            db.goOffline()
+            db.setPersistenceEnabled(false)*/
             auth.signOut()
             findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
         }
@@ -73,13 +72,15 @@ class SecondFragment : Fragment() {
 */
         return view
     }
+    /*
+      private fun setup(email: String, provider: String){
+          title = "inicio"
+          binding.
+          providerTextView.text = provider
 
-    private fun setup(email: String, provider: String){
-      /*  title = "inicio"
-        binding.
-        providerTextView.text = provider
+          logOutButton.setOnclick
 
-        logOutButton.setOnclick
-*/
-    }
+    }*/
 }
+
+
