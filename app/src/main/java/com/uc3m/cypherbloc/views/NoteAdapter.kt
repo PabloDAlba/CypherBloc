@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.PopupWindow
 import android.widget.Toast
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModelProvider
@@ -12,6 +13,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
+import com.uc3m.cypherbloc.R
 import com.uc3m.cypherbloc.databinding.FragmentSecondBinding
 import com.uc3m.cypherbloc.databinding.RecyclerViewItemBinding
 import com.uc3m.cypherbloc.models.Notes
@@ -21,13 +23,13 @@ import kotlinx.coroutines.launch
 import java.util.EnumSet.of
 import java.util.List.of
 
-class NoteAdapter: RecyclerView.Adapter<NoteAdapter.MyViewHolder>() {
+class NoteAdapter(private val viewModel: NotesViewModel, private val context : Context): RecyclerView.Adapter<NoteAdapter.MyViewHolder>() {
 
     private var notesList = emptyList<Notes>()
     private lateinit var auth: FirebaseAuth
 
-    private lateinit var notesViewModel: NotesViewModel
-
+    private val notesViewModel: NotesViewModel = viewModel
+    private val mContext = context
 
 
     class MyViewHolder(val binding: RecyclerViewItemBinding): RecyclerView.ViewHolder(binding.root)
@@ -56,11 +58,17 @@ class NoteAdapter: RecyclerView.Adapter<NoteAdapter.MyViewHolder>() {
             binding.BotonBorrar.setOnClickListener {
                 val id = currentItem.id.toInt()
 
-                //no funciona debido a que no podemos inicializar notesVidewModel
-                //notesViewModel.deleteNote(id)
+                notesViewModel.deleteNote(id)
+            }
+
+            binding.BotonMostrar.setOnClickListener{
+               // val window = PopupWindow(mContext)
+                //val view = layoutInflater.inflate(R.layout.popup_layout, null)
+                //window.contentView = view
             }
 
         }
+
     }
 
     override fun getItemCount(): Int {

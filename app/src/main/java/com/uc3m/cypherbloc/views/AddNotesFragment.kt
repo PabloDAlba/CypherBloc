@@ -40,6 +40,9 @@ class AddNotesFragment : Fragment() {
             insertDataToDatabase()
         }
 
+        binding.buttonBack.setOnClickListener(){
+            findNavController().navigate(R.id.action_addNotesFragment2_to_SecondFragment)
+        }
 
 
         return view

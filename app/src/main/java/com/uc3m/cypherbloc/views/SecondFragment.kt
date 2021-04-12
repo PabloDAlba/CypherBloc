@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 import com.uc3m.cypherbloc.R
 import com.uc3m.cypherbloc.databinding.FragmentSecondBinding
 import com.uc3m.cypherbloc.viewModels.NotesViewModel
@@ -37,17 +36,23 @@ class SecondFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
         val currentUser = auth.currentUser
 
+
         binding.user.text = currentUser?.displayName
 
-        val adapter = NoteAdapter()
+        notesViewModel = ViewModelProvider(this).get(NotesViewModel::class.java)
+
+        val adapter = NoteAdapter(notesViewModel, requireContext())
+
+
+        notesViewModel.readAll.observe(viewLifecycleOwner, { notes -> adapter.setData(notes) })
+
         val recyclerView = binding.recyclerView
 
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
 
-        notesViewModel = ViewModelProvider(this).get(NotesViewModel::class.java)
-        notesViewModel.readAll.observe(viewLifecycleOwner, { notes -> adapter.setData(notes) })
+
 
 
 

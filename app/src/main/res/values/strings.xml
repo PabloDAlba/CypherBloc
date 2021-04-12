@@ -5,7 +5,7 @@
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
-    <string name="previous">Previous</string>
+    <string name="previous">Cerrar Sesión</string>
 
     <string name="hello_first_fragment">Aqui irá el inicio de sesión</string>
     <string name="hello_second_fragment">Aquí aparecerán las notas</string>
