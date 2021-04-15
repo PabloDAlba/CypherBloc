@@ -7,18 +7,19 @@ import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 import com.uc3m.cypherbloc.R
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), Comunicator {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        getsupportFragmentManager()
+
 
     }
 
@@ -31,5 +32,19 @@ class MainActivity : AppCompatActivity() {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun passDataCom(editext_input: Int) {
+        val bundle = Bundle()
+        bundle.putInt("ID",editext_input)
+
+        val transaction = this.supportFragmentManager.beginTransaction()
+        val frag2 = PassFragment()
+        frag2.arguments = bundle
+
+        transaction.replace(R.id.SecondFragment, frag2)
+        transaction.addToBackStack(null)
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        transaction.commit()
     }
 }

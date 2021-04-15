@@ -4,7 +4,10 @@ import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.Navigation
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 //import com.google.firebase.auth.FirebaseAuth
 import com.uc3m.cypherbloc.R
@@ -17,6 +20,8 @@ class NoteAdapter(private val viewModel: NotesViewModel, private val context : C
 
     private var notesList = emptyList<Notes>()
     //private lateinit var auth: FirebaseAuth
+
+    private lateinit var comm: Comunicator
 
     private val notesViewModel: NotesViewModel = viewModel
     //private val mContext = context
@@ -51,8 +56,10 @@ class NoteAdapter(private val viewModel: NotesViewModel, private val context : C
 
             binding.BotonMostrar.setOnClickListener{
                 //decode
-
-                Navigation.createNavigateOnClickListener(R.id.action_SecondFragment_to_passFragment)
+                //comm = activity as Comunicator
+                //comm.passDataCom(currentItem.id)
+                findNavController(binding.root).navigate(R.id.action_SecondFragment_to_passFragment)
+                //Navigation.createNavigateOnClickListener(R.id.action_SecondFragment_to_passFragment)
                 //var text : CharArray = "1234".toCharArray()
                 //AESEncryptionDecryption().decrypt(context, text, currentItem.content)
 

@@ -19,6 +19,7 @@ class PassFragment : Fragment() {
     private lateinit var binding: PassLayoutBinding
     private lateinit var notesViewModel: NotesViewModel
     private lateinit var auth: FirebaseAuth
+    private var Noteid: Int? = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,6 +33,7 @@ class PassFragment : Fragment() {
         val currentUser = auth.currentUser
         binding.user.text = currentUser?.displayName
 
+        Noteid = arguments?.getInt("ID")
         //Notes
         notesViewModel = ViewModelProvider(this).get(NotesViewModel::class.java)
         val adapter = NoteAdapter(notesViewModel, requireContext())

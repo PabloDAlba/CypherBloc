@@ -56,10 +56,10 @@ class AddNotesFragment : Fragment() {
         var creadorNota = auth.currentUser?.email.toString()
         //creadorNota = AESEncryptionDecryption().encrypt(context, creadorNota, password).toString()
         var AuxcontenidoNota = binding.ContenidoNota.text.toString()
-        var contenidoNota = AESEncryptionDecryption().encrypt(context, AuxcontenidoNota, password)
 
-        if(inputCheck(nombreNota, creadorNota, contenidoNota.toString())){
 
+        if(inputCheck(nombreNota, creadorNota, AuxcontenidoNota,password.toString())){
+            var contenidoNota = AESEncryptionDecryption().encrypt(context, AuxcontenidoNota, password)
             val note = Notes(0,nombreNota,creadorNota,contenidoNota)
             notesViewModel.addNote(note)
             Toast.makeText(requireContext(), "Nota creada con exito", Toast.LENGTH_LONG).show()
@@ -69,7 +69,7 @@ class AddNotesFragment : Fragment() {
         }
     }
 
-    private fun inputCheck(nombreNota: String, creadorNota: String, contenidoNota: String): Boolean{
-        return!(TextUtils.isEmpty(nombreNota) || TextUtils.isEmpty(creadorNota) || TextUtils.isEmpty(contenidoNota))
+    private fun inputCheck(nombreNota: String, creadorNota: String, contenidoNota: String, password: String): Boolean{
+        return!(TextUtils.isEmpty(nombreNota) || TextUtils.isEmpty(creadorNota) || TextUtils.isEmpty(contenidoNota) || TextUtils.isEmpty(password))
     }
 }
