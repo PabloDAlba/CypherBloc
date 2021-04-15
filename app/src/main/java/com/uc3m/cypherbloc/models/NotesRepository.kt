@@ -14,6 +14,14 @@ class NotesRepository(private val notesDao: NotesDao, email: String) {
         notesDao.deleteNote(id)
     }
 
+    suspend fun findNote(id: Int) {
+        notesDao.findNote(id)
+    }
+
+    suspend fun updateNote(id: Int, content: ByteArray) {
+        notesDao.updateNote(id, content)
+    }
+
 
 
 

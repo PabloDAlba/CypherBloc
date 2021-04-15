@@ -53,6 +53,9 @@ dependencies {
     //AES
     implementation 'androidx.preference:preference-ktx:1.1.1'
 
+    //Passing values between fragments
+    //def nav_version = "2.1.0"
+    //implementation "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
 
     //Firebase
     implementation platform('com.google.firebase:firebase-bom:26.6.0')

@@ -1,35 +1,25 @@
 package com.uc3m.cypherbloc.views
 
 import android.content.Context
-import android.util.Log
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.PopupWindow
-import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStore
-import androidx.lifecycle.ViewModelStoreOwner
-import androidx.lifecycle.viewModelScope
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.auth.FirebaseAuth
+//import com.google.firebase.auth.FirebaseAuth
 import com.uc3m.cypherbloc.R
-import com.uc3m.cypherbloc.databinding.FragmentSecondBinding
 import com.uc3m.cypherbloc.databinding.RecyclerViewItemBinding
 import com.uc3m.cypherbloc.models.Notes
 import com.uc3m.cypherbloc.viewModels.NotesViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.util.EnumSet.of
-import java.util.List.of
 
 class NoteAdapter(private val viewModel: NotesViewModel, private val context : Context): RecyclerView.Adapter<NoteAdapter.MyViewHolder>() {
 
+
     private var notesList = emptyList<Notes>()
-    private lateinit var auth: FirebaseAuth
+    //private lateinit var auth: FirebaseAuth
 
     private val notesViewModel: NotesViewModel = viewModel
-    private val mContext = context
+    //private val mContext = context
 
 
     class MyViewHolder(val binding: RecyclerViewItemBinding): RecyclerView.ViewHolder(binding.root)
@@ -47,21 +37,26 @@ class NoteAdapter(private val viewModel: NotesViewModel, private val context : C
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val currentItem = notesList[position]
 
-        auth = FirebaseAuth.getInstance()
-        val currentUser = auth.currentUser
 
         with(holder){
-            binding.NombreNota.text = currentItem.title.toString()
-            binding.CreadorNota.text = currentItem.creator.toString()
+            binding.NombreNota.text = currentItem.title
+            binding.CreadorNota.text = currentItem.creator
             binding.ContenidoNota.text = currentItem.content.toString()
 
             binding.BotonBorrar.setOnClickListener {
-                val id = currentItem.id.toInt()
+                val id = currentItem.id
 
                 notesViewModel.deleteNote(id)
             }
 
             binding.BotonMostrar.setOnClickListener{
+                //decode
+
+                Navigation.createNavigateOnClickListener(R.id.action_SecondFragment_to_passFragment)
+                //var text : CharArray = "1234".toCharArray()
+                //AESEncryptionDecryption().decrypt(context, text, currentItem.content)
+
+
                // val window = PopupWindow(mContext)
                 //val view = layoutInflater.inflate(R.layout.popup_layout, null)
                 //window.contentView = view

@@ -1,6 +1,7 @@
 package com.uc3m.cypherbloc.models
 
 import android.content.Context
+import android.util.Log
 import androidx.preference.PreferenceManager
 import android.widget.Toast
 import java.io.ByteArrayInputStream
@@ -15,6 +16,7 @@ import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.PBEKeySpec
 import javax.crypto.spec.SecretKeySpec
+import kotlin.system.exitProcess
 
 
 class AESEncryptionDecryption {
@@ -37,13 +39,22 @@ class AESEncryptionDecryption {
         val iv = cipher.parameters.getParameterSpec(IvParameterSpec::class.java).iv
         val ciphertext = cipher.doFinal(strToEncrypt.toByteArray(charset("UTF-8")))
 
-        // reinit cypher using param spec
-        cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
+        Log.d("text to code", strToEncrypt)
+        Log.d("coded text", ciphertext.toString())
+        Log.d("ivspec", IvParameterSpec(iv).toString())
 
+
+        // reinit cypher using param spec
+
+        cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
         cipher.init(Cipher.DECRYPT_MODE, key, IvParameterSpec(iv))
+        val aux = cipher.doFinal(ciphertext)
+        Log.d("decoded bytearray", aux.toString())
+        Log.d("string(byteArray)", String(aux))
 
         saveSecretKey(context, key)
         saveInitializationVector(context, cipher.iv)
+
 
         Toast.makeText(context, "dbg encrypted = [" + ciphertext.toString() + "]", Toast.LENGTH_LONG).show()
 
@@ -67,11 +78,27 @@ class AESEncryptionDecryption {
 
     }
 
-    fun decrypt(context: Context, dataToDecrypt: ByteArray): ByteArray {
+    fun decrypt(context: Context, password: CharArray, dataToDecrypt: ByteArray): String {
+        //transforming input password to SecretKey to compare
+        val salt = byteArrayOf(50, 111, 8, 53, 86, 35, -19, -47)
+        val factory: SecretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1")
+        val spec: KeySpec = PBEKeySpec(password, salt, 65536, 256)
+        val tmp: SecretKey = factory.generateSecret(spec)
+        val key: SecretKey = SecretKeySpec(tmp.encoded, "AES")
+
+        //recovering saved SecretKey
         val cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING")
         val ivSpec = IvParameterSpec(getSavedInitializationVector(context))
-        cipher.init(Cipher.DECRYPT_MODE, getSavedSecretKey(context), ivSpec)
+
+        Log.d("ivspec decryption", ivSpec.toString())
+        if (key != getSavedSecretKey(context)){
+
+        }
+        //Process init
+        Log.d("dataToDecrypt", dataToDecrypt.toString())
+        cipher.init(Cipher.DECRYPT_MODE, key, ivSpec)
         val cipherText = cipher.doFinal(dataToDecrypt)
+        Log.d("dataDecrypted", String(cipherText))
 
         val sb = StringBuilder()
         for (b in cipherText) {
@@ -79,7 +106,7 @@ class AESEncryptionDecryption {
         }
         Toast.makeText(context, "dbg decrypted = [" + sb.toString() + "]", Toast.LENGTH_LONG).show()
 
-        return cipherText
+        return sb.toString()
     }
 
     fun saveSecretKey(context: Context?, key: SecretKey) {

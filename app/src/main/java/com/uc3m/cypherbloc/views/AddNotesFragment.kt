@@ -55,10 +55,10 @@ class AddNotesFragment : Fragment() {
         //nombreNota = AESEncryptionDecryption().encrypt(context, nombreNota).toString()
         var creadorNota = auth.currentUser?.email.toString()
         //creadorNota = AESEncryptionDecryption().encrypt(context, creadorNota, password).toString()
-        var contenidoNota = binding.ContenidoNota.text.toString()
-        contenidoNota = AESEncryptionDecryption().encrypt(context, contenidoNota, password).toString()
+        var AuxcontenidoNota = binding.ContenidoNota.text.toString()
+        var contenidoNota = AESEncryptionDecryption().encrypt(context, AuxcontenidoNota, password)
 
-        if(inputCheck(nombreNota, creadorNota, contenidoNota)){
+        if(inputCheck(nombreNota, creadorNota, contenidoNota.toString())){
 
             val note = Notes(0,nombreNota,creadorNota,contenidoNota)
             notesViewModel.addNote(note)

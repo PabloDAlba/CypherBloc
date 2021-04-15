@@ -51,11 +51,9 @@ class SecondFragment : Fragment() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-
-
-
-
-
+        binding.buttonPass.setOnClickListener {
+            findNavController().navigate(R.id.action_SecondFragment_to_passFragment)
+        }
         binding.buttonSecond.setOnClickListener {
             //hace falta un flush() para borrar cookies pero no encuentro como hacerlo
            /* val db = FirebaseDatabase.getInstance()
@@ -68,24 +66,9 @@ class SecondFragment : Fragment() {
         binding.floatingActionButton.setOnClickListener {
             findNavController().navigate(R.id.action_SecondFragment_to_addNotesFragment22)
         }
-/**
-        // setup
-        val bundle: Bundle? = intent.extras
-        val email: String? = bundle?.getString(key: "email")
-        val provider: String? = bundle?.getString(key:"provider")
-        setup(email:email ?: "", provider:provider ?: "")
-*/
         return view
     }
-    /*
-      private fun setup(email: String, provider: String){
-          title = "inicio"
-          binding.
-          providerTextView.text = provider
 
-          logOutButton.setOnclick
-
-    }*/
 }
 
 

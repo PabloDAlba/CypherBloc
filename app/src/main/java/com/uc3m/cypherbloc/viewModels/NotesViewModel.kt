@@ -16,13 +16,12 @@ class NotesViewModel(application: Application): AndroidViewModel(application) {
 
     val readAll: LiveData<List<Notes>>
     private val repository: NotesRepository
-    private lateinit var email_user :String
+    private val emailUser :String = Firebase.auth.currentUser.email.toString()
 
 
     init{
-        email_user = Firebase.auth.currentUser.email.toString()
         val notesDao = NotesDatabase.getDatabase(application).notesDao()
-        repository = NotesRepository(notesDao, email_user)
+        repository = NotesRepository(notesDao, emailUser)
         readAll = repository.readAll
     }
 
@@ -35,6 +34,12 @@ class NotesViewModel(application: Application): AndroidViewModel(application) {
     fun deleteNote(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteNote(id)
+        }
+    }
+
+    fun findNote(id: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.findNote(id)
         }
     }
 

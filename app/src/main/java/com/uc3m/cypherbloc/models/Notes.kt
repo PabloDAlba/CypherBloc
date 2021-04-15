@@ -9,5 +9,5 @@ data class Notes(
     val id: Int,
     val title: String,
     val creator: String,
-    val content: String
+    val content: ByteArray
 )

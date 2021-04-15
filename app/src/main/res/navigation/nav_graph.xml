@@ -27,6 +27,9 @@
         <action
             android:id="@+id/action_SecondFragment_to_addNotesFragment22"
             app:destination="@id/addNotesFragment2" />
+        <action
+            android:id="@+id/action_SecondFragment_to_passFragment"
+            app:destination="@id/passFragment" />
     </fragment>
     <fragment
         android:id="@+id/addNotesFragment2"
@@ -35,6 +38,15 @@
         tools:layout="@layout/fragment_add_notes" >
         <action
             android:id="@+id/action_addNotesFragment2_to_SecondFragment"
+            app:destination="@id/SecondFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/passFragment"
+        android:name="com.uc3m.cypherbloc.views.PassFragment"
+        android:label="pass_layout"
+        tools:layout="@layout/pass_layout" >
+        <action
+            android:id="@+id/action_passFragment_to_SecondFragment"
             app:destination="@id/SecondFragment" />
     </fragment>
 </navigation>
