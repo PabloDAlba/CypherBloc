@@ -16,7 +16,7 @@ import com.uc3m.cypherbloc.models.Notes
 import com.uc3m.cypherbloc.viewModels.NotesViewModel
 import com.uc3m.cypherbloc.models.AESEncryptionDecryption
 
-class AddNotesFragment : Fragment() {
+ class AddNotesFragment : Fragment() {
 
     private lateinit var  binding: FragmentAddNotesBinding
     private lateinit var notesViewModel: NotesViewModel
@@ -50,16 +50,13 @@ class AddNotesFragment : Fragment() {
 
     private fun insertDataToDatabase(){
         val password = binding.Password.text.toString().toCharArray()
-
+        val auxPass = password.toString()
         val nombreNota = binding.NombreNota.text.toString()
-        //nombreNota = AESEncryptionDecryption().encrypt(context, nombreNota).toString()
-        var creadorNota = auth.currentUser?.email.toString()
-        //creadorNota = AESEncryptionDecryption().encrypt(context, creadorNota, password).toString()
-        var AuxcontenidoNota = binding.ContenidoNota.text.toString()
+        val creadorNota = auth.currentUser?.email.toString()
+        val AuxcontenidoNota = binding.ContenidoNota.text.toString()
 
-
-        if(inputCheck(nombreNota, creadorNota, AuxcontenidoNota,password.toString())){
-            var contenidoNota = AESEncryptionDecryption().encrypt(context, AuxcontenidoNota, password)
+        if(inputCheck(nombreNota, creadorNota, AuxcontenidoNota, auxPass)){
+            val contenidoNota = AESEncryptionDecryption().encrypt(context, AuxcontenidoNota, password)
             val note = Notes(0,nombreNota,creadorNota,contenidoNota)
             notesViewModel.addNote(note)
             Toast.makeText(requireContext(), "Nota creada con exito", Toast.LENGTH_LONG).show()
@@ -69,7 +66,10 @@ class AddNotesFragment : Fragment() {
         }
     }
 
-    private fun inputCheck(nombreNota: String, creadorNota: String, contenidoNota: String, password: String): Boolean{
-        return!(TextUtils.isEmpty(nombreNota) || TextUtils.isEmpty(creadorNota) || TextUtils.isEmpty(contenidoNota) || TextUtils.isEmpty(password))
+
+    private fun inputCheck(nombreNota: String, creadorNota: String, contenidoNota: String, auxPass: String): Boolean{
+        return!(TextUtils.isEmpty(nombreNota) || TextUtils.isEmpty(creadorNota) || TextUtils.isEmpty(contenidoNota) || TextUtils.isEmpty(auxPass))
     }
+
+
 }

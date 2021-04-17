@@ -92,7 +92,7 @@ class AESEncryptionDecryption {
 
         Log.d("ivspec decryption", ivSpec.toString())
         if (key != getSavedSecretKey(context)){
-
+            exitProcess(-1)
         }
         //Process init
         Log.d("dataToDecrypt", dataToDecrypt.toString())

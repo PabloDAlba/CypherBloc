@@ -9,25 +9,54 @@
 
     <TextView
         android:id="@+id/NombreNota"
+        android:layout_width="396dp"
+        android:layout_height="wrap_content"
+        android:text="TextView1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!--
+        <TextView
+            android:id="@+id/ContenidoNota"
+            android:layout_width="163dp"
+            android:layout_height="44dp"
+            android:text="TextView2"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+-->
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="185dp"
+            android:layout_height="44dp"
+            android:ems="10"
+            android:hint="Contraseña"
+            android:inputType="textPersonName"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <EditText
+        android:id="@+id/textDecrypted"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:text="TextView1" />
-
-    <TextView
-        android:id="@+id/CreadorNota"
-        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:text=""
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:layout_height="wrap_content"
-        android:text="TextView2" />
-
-    <TextView
-        android:id="@+id/ContenidoNota"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
         android:layout_width="match_parent"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:layout_height="wrap_content"
-        android:text="TextView3" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -41,25 +70,23 @@
                 android:id="@+id/BotonMostrar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="36dp"
-                android:text="Mostrar Nota"
+                android:layout_marginEnd="28dp"
                 android:backgroundTint="@color/green"
-                app:layout_constraintEnd_toStartOf="@+id/BotonBorrar"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:layout_editor_absoluteY="0dp"
-                tools:ignore="MissingConstraints" />
+                android:text="Mostrar Nota"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:ignore="MissingConstraints"
+                tools:layout_editor_absoluteY="1dp" />
 
             <Button
                 android:id="@+id/BotonBorrar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="36dp"
-                android:text="Eliminar"
                 android:backgroundTint="@color/red"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:layout_editor_absoluteY="0dp"
-                tools:ignore="MissingConstraints" />
+                android:text="Eliminar"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="MissingConstraints"
+                tools:layout_editor_absoluteY="1dp" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>

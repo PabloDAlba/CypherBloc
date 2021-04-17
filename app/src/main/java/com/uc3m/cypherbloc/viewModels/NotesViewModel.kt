@@ -43,5 +43,11 @@ class NotesViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
+    fun updateNote(id: Int, content: ByteArray) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateNote(id, content)
+        }
+    }
+
 
 }
