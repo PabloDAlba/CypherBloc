@@ -3,6 +3,8 @@ package com.uc3m.cypherbloc.views
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -37,10 +39,6 @@ class NoteAdapter(private val viewModel: NotesViewModel, private val context : C
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val binding = RecyclerViewItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        //la linea de abajo da error
-        //notesViewModel = ViewModelProvider(this ).get(NotesViewModel::class.java)
-
-
         return MyViewHolder(binding)
     }
 
@@ -50,30 +48,39 @@ class NoteAdapter(private val viewModel: NotesViewModel, private val context : C
 
         with(holder){
             binding.NombreNota.text = currentItem.title
-            //binding.CreadorNota.text = currentItem.creator
 
             binding.BotonBorrar.setOnClickListener {
                 val id = currentItem.id
 
                 notesViewModel.deleteNote(id)
             }
-
+            binding.BotonShowPassword.setOnClickListener{
+                if(binding.BotonShowPassword.text.toString().equals("Show")){
+                    binding.password.transformationMethod = HideReturnsTransformationMethod.getInstance()
+                    binding.BotonShowPassword.text = "Hide"
+                }
+                else{
+                    binding.password.transformationMethod = PasswordTransformationMethod.getInstance()
+                    binding.BotonShowPassword.text = "Show"
+                }
+            }
             binding.BotonMostrar.setOnClickListener{
                 val password = binding.password.text.toString().toCharArray()
                 //MOSTRANDO NOTA
                 if(binding.textDecrypted.visibility == View.GONE){
                     val newContent =  currentItem.content
-                    val textDecrypted = AESEncryptionDecryption().decrypt(context, password, currentItem.content)
-
-                    //checking password
-                    if (textDecrypted == null) Toast.makeText(context,"CONTRASEÑA INCORRECTA", Toast.LENGTH_LONG).show()
+                    val textDecrypted = AESEncryptionDecryption().decrypt(context, password, newContent)
 
                     //password correct
-                    else {
+                    if (textDecrypted != null){
                         //showing content decrypted
                         binding.textDecrypted.text = textDecrypted.toEditable()
                         binding.BotonMostrar.text = "GUARDAR"
                         binding.textDecrypted.visibility = View.VISIBLE
+                    }
+
+                    else{
+                        binding.password.text = "".toEditable()
                     }
                 }
                 else {
@@ -92,9 +99,6 @@ class NoteAdapter(private val viewModel: NotesViewModel, private val context : C
                     //findNavController(binding.root).navigate(R.id.action_SecondFragment_to_passFragment)
 
 
-                    // val window = PopupWindow(mContext)
-                    //val view = layoutInflater.inflate(R.layout.popup_layout, null)
-                    //window.contentView = view
                 }
             }
 

@@ -39,9 +39,6 @@ class AESEncryptionDecryption {
         val iv = cipher.parameters.getParameterSpec(IvParameterSpec::class.java).iv
         val ciphertext = cipher.doFinal(strToEncrypt.toByteArray(charset("UTF-8")))
 
-        Log.d("text to code", strToEncrypt)
-        Log.d("coded text", ciphertext.toString())
-        Log.d("ivspec", IvParameterSpec(iv).toString())
 
 
         // reinit cypher using param spec
@@ -49,36 +46,17 @@ class AESEncryptionDecryption {
         cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
         cipher.init(Cipher.DECRYPT_MODE, key, IvParameterSpec(iv))
         val aux = cipher.doFinal(ciphertext)
-        Log.d("decoded bytearray", aux.toString())
-        Log.d("string(byteArray)", String(aux))
 
         saveSecretKey(context, key)
         saveInitializationVector(context, cipher.iv)
 
 
-        Toast.makeText(context, "dbg encrypted = [" + ciphertext.toString() + "]", Toast.LENGTH_LONG).show()
 
         return ciphertext
 
-      /*  val plainText = strToEncrypt.toByteArray(Charsets.UTF_8)
-        val keygen = KeyGenerator.getInstance("AES")
-        keygen.init(256)
-        val key = keygen.generateKey()*/
-
-      /*val cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING")
-        cipher.init(Cipher.ENCRYPT_MODE, key)
-        val cipherText = cipher.doFinal(plainText)*/
-
-/*
-        val sb = StringBuilder()
-        for (b in cipherText) {
-            sb.append(b.toChar())
-        }
- */
-
     }
 
-    fun decrypt(context: Context, password: CharArray, dataToDecrypt: ByteArray): String {
+    fun decrypt(context: Context, password: CharArray, dataToDecrypt: ByteArray): String? {
         //transforming input password to SecretKey to compare
         val salt = byteArrayOf(50, 111, 8, 53, 86, 35, -19, -47)
         val factory: SecretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1")
@@ -90,21 +68,18 @@ class AESEncryptionDecryption {
         val cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING")
         val ivSpec = IvParameterSpec(getSavedInitializationVector(context))
 
-        Log.d("ivspec decryption", ivSpec.toString())
         if (key != getSavedSecretKey(context)){
-            exitProcess(-1)
+            Toast.makeText(context, "Contraseña Erronea, pruebe de nuevo", Toast.LENGTH_LONG).show()
+            return null
         }
         //Process init
-        Log.d("dataToDecrypt", dataToDecrypt.toString())
         cipher.init(Cipher.DECRYPT_MODE, key, ivSpec)
         val cipherText = cipher.doFinal(dataToDecrypt)
-        Log.d("dataDecrypted", String(cipherText))
 
         val sb = StringBuilder()
         for (b in cipherText) {
             sb.append(b.toChar())
         }
-        Toast.makeText(context, "dbg decrypted = [" + sb.toString() + "]", Toast.LENGTH_LONG).show()
 
         return sb.toString()
     }

@@ -2,6 +2,8 @@ package com.uc3m.cypherbloc.views
 
 import android.os.Bundle
 import android.text.TextUtils
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -36,7 +38,19 @@ import com.uc3m.cypherbloc.models.AESEncryptionDecryption
 
         notesViewModel = ViewModelProvider(this ).get(NotesViewModel::class.java)
 
-        binding.button.setOnClickListener{
+
+        binding.buttonShowPassword.setOnClickListener{
+            if(binding.buttonShowPassword.text.toString().equals("Show")){
+                binding.Password.transformationMethod = HideReturnsTransformationMethod.getInstance()
+                binding.buttonShowPassword.text = "Hide"
+            }
+            else{
+                binding.Password.transformationMethod = PasswordTransformationMethod.getInstance()
+                binding.buttonShowPassword.text = "Show"
+            }
+        }
+
+        binding.buttonAdd.setOnClickListener{
             insertDataToDatabase()
         }
 

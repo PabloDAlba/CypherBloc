@@ -54,10 +54,7 @@ class SecondFragment : Fragment() {
 
 
         binding.buttonSecond.setOnClickListener {
-            //hace falta un flush() para borrar cookies pero no encuentro como hacerlo
-           /* val db = FirebaseDatabase.getInstance()
-            db.goOffline()
-            db.setPersistenceEnabled(false)*/
+
             auth.signOut()
             findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
         }

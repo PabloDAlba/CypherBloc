@@ -24,7 +24,6 @@ import com.uc3m.cypherbloc.databinding.FragmentFirstBinding
 class FirstFragment : Fragment() {
 
     private lateinit var binding: FragmentFirstBinding
-    //private val GOOGLE_SIGN_IN = 100
 
 
     companion object {
@@ -78,12 +77,9 @@ class FirstFragment : Fragment() {
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 val account = task.getResult(ApiException::class.java)!!
-                Log.d("Fragment Login", "firebaseAuthWithGoogle:" + account.id)
                 firebaseAuthWithGoogle(account.idToken!!)
             } catch (e: ApiException) {
-                // Google Sign In failed, update UI appropriately
                 Log.w("Fragment Login", "Google sign in failed", e)
-                // ...
             }
         }
     }
