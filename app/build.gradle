@@ -49,6 +49,9 @@ dependencies {
     //POPUP
     implementation 'androidx.cardview:cardview:1.0.0'
 
+    //Keccak
+    implementation("com.ionspin.kotlin:bignum:0.3.0")
+
 
     //AES
     implementation 'androidx.preference:preference-ktx:1.1.1'

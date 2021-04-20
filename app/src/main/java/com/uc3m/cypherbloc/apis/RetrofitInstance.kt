@@ -1,7 +1,7 @@
 package com.uc3m.cypherbloc.apis
 
 
-import com.uc3m.cypherbloc.utils.Constants.Companion.PWNED_URL
+import com.uc3m.cypherbloc.utils.Constants.Companion.XoNAPI_URL
 import okhttp3.CertificatePinner
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -14,7 +14,7 @@ object RetrofitInstance {
         val httpBuilder = OkHttpClient.Builder()
 
         val certificatePinner = CertificatePinner.Builder()
-            .add("blockchain.info", "sha256/Z87j23nY+/WSTtsgE/O4ZcDVhevBohFPgPMU6rV2iSw=")
+            .add("https://xposedornot.com/api/v1/pass/anon/", "")
             .build()
 
         val okHttpClient = OkHttpClient.Builder()
@@ -22,14 +22,14 @@ object RetrofitInstance {
             .build()
 
         Retrofit.Builder()
-            .baseUrl(PWNED_URL)
+            .baseUrl(XoNAPI_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()
     }
 
-    val api: PwnedAPI by lazy {
-        retrofit.create(PwnedAPI::class.java)
+    val api: XoNAPI by lazy {
+        retrofit.create(XoNAPI::class.java)
     }
 
 }

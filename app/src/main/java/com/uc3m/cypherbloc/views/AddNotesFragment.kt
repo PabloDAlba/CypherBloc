@@ -39,6 +39,10 @@ import com.uc3m.cypherbloc.models.AESEncryptionDecryption
         notesViewModel = ViewModelProvider(this ).get(NotesViewModel::class.java)
 
 
+        binding.buttonCheckPassword.setOnClickListener{
+            val pwd = binding.Password.toString()
+        }
+
         binding.buttonShowPassword.setOnClickListener{
             if(binding.buttonShowPassword.text.toString().equals("Show")){
                 binding.Password.transformationMethod = HideReturnsTransformationMethod.getInstance()
