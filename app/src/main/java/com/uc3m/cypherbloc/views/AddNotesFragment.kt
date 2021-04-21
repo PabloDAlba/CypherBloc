@@ -13,6 +13,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.common.util.Hex
@@ -22,12 +23,15 @@ import com.uc3m.cypherbloc.apis.XoNAPI
 import com.uc3m.cypherbloc.databinding.FragmentAddNotesBinding
 import com.uc3m.cypherbloc.models.AESEncryptionDecryption
 import com.uc3m.cypherbloc.models.Notes
+import com.uc3m.cypherbloc.models.XoN
 import com.uc3m.cypherbloc.models.XoNAux
 import com.uc3m.cypherbloc.utils.Constants
 import com.uc3m.cypherbloc.viewModels.NotesViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.CertificatePinner
+import okhttp3.OkHttpClient
 import org.komputing.khash.keccak.KeccakParameter
 import org.komputing.khash.keccak.extensions.digestKeccak
 import retrofit2.Response
@@ -35,6 +39,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class AddNotesFragment : Fragment() {
+
+    private var myCount: Int = -1
 
     private lateinit var binding: FragmentAddNotesBinding
     private lateinit var notesViewModel: NotesViewModel
@@ -60,11 +66,17 @@ class AddNotesFragment : Fragment() {
             val pwd = binding.Password.text.toString()
             val x1 = pwd.digestKeccak(KeccakParameter.KECCAK_512)
             val hex1 = Hex.bytesToStringLowercase(x1)
-            Log.d("keccak1", hex1)
 
+            searchPass(hex1.substring(0,10))
 
-            //var url = "https://xposedornot.com/api/v1/pass/anon/$hex"
-            //URL(url).readText()
+            if(myCount == 0) {
+                Toast.makeText(requireContext(), "Tu contraseña es segura", Toast.LENGTH_SHORT).show()
+                myCount = -1
+            }
+            if(myCount == 1) {
+                Toast.makeText(requireContext(), "Tu contraseña no es segura, prueba con otra distinta", Toast.LENGTH_SHORT).show()
+                myCount = -1
+            }
 
 
         }
@@ -87,19 +99,6 @@ class AddNotesFragment : Fragment() {
         binding.buttonBack.setOnClickListener() {
             findNavController().navigate(R.id.action_addNotesFragment2_to_SecondFragment)
         }
-
-        webView = binding.web
-        webView.settings.javaScriptEnabled = true
-
-        webView.webViewClient = object : WebViewClient() {
-            override fun shouldOverrideUrlLoading(
-                view: WebView?,
-                request: WebResourceRequest?
-            ): Boolean {
-                return super.shouldOverrideUrlLoading(view, request)
-            }
-        }
-        webView.loadUrl("https://emn178.github.io/online-tools/keccak_512.html")
 
 
         return view
@@ -137,9 +136,21 @@ class AddNotesFragment : Fragment() {
     }
 
     private fun getRetrofit(): Retrofit {
+        val certificatePinner = CertificatePinner.Builder()
+            .add("https://xposedornot.com/api/v1/pass/anon/")
+            .build()
+
+        //Este sería el pin para el certificado, pero al no ser una URL fija no sabemos bien como hacerlo de esta manera
+        //PcIiExMyjUj9Dt9n0LFGwIzVwwoxcMryiWILZhUZ6as=
+
+        val okHttpClient = OkHttpClient.Builder()
+            .certificatePinner(certificatePinner)
+            .build()
+
         return Retrofit.Builder()
             .baseUrl(Constants.XoNAPI_URL)
             .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient)
             .build()
     }
 
@@ -147,16 +158,14 @@ class AddNotesFragment : Fragment() {
         CoroutineScope(Dispatchers.IO).launch {
             val call: Response<XoNAux> =
                 getRetrofit().create(XoNAPI::class.java).CheckPass("$query")
-            val content: XoNAux? = call.body()
-            var count: Int? = 0
-            //lo que sea
-            if (call.isSuccessful) count = content?.json?.count?.toInt()
-            else {
-                //gestionar error
+                if(call.isSuccessful) myCount = 1
+                else myCount = 0
+
             }
+
         }
     }
-}
+
 
 
 

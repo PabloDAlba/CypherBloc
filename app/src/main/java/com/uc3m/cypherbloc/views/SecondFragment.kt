@@ -24,7 +24,6 @@ class SecondFragment : Fragment() {
     private lateinit var binding: FragmentSecondBinding
     private lateinit var notesViewModel: NotesViewModel
     private lateinit var auth: FirebaseAuth
-    private lateinit var comm: Comunicator
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

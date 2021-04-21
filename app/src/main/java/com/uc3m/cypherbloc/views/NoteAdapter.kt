@@ -1,7 +1,7 @@
 package com.uc3m.cypherbloc.views
 
 import android.content.Context
-import android.os.Bundle
+
 import android.text.Editable
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
@@ -10,13 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.viewModelScope
-import androidx.navigation.Navigation
-import androidx.navigation.Navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-//import com.google.firebase.auth.FirebaseAuth
-import com.uc3m.cypherbloc.R
 import com.uc3m.cypherbloc.databinding.RecyclerViewItemBinding
 import com.uc3m.cypherbloc.models.AESEncryptionDecryption
 import com.uc3m.cypherbloc.models.Notes
@@ -26,12 +20,10 @@ class NoteAdapter(private val viewModel: NotesViewModel, private val context : C
 
 
     private var notesList = emptyList<Notes>()
-    //private lateinit var auth: FirebaseAuth
 
-    private lateinit var comm: Comunicator
 
     private val notesViewModel: NotesViewModel = viewModel
-    //private val mContext = context
+
 
 
     class MyViewHolder(val binding: RecyclerViewItemBinding): RecyclerView.ViewHolder(binding.root)
@@ -65,40 +57,43 @@ class NoteAdapter(private val viewModel: NotesViewModel, private val context : C
                 }
             }
             binding.BotonMostrar.setOnClickListener{
-                val password = binding.password.text.toString().toCharArray()
-                //MOSTRANDO NOTA
-                if(binding.textDecrypted.visibility == View.GONE){
-                    val newContent =  currentItem.content
-                    val textDecrypted = AESEncryptionDecryption().decrypt(context, password, newContent)
-
-                    //password correct
-                    if (textDecrypted != null){
-                        //showing content decrypted
-                        binding.textDecrypted.text = textDecrypted.toEditable()
-                        binding.BotonMostrar.text = "GUARDAR"
-                        binding.textDecrypted.visibility = View.VISIBLE
-                    }
-
-                    else{
-                        binding.password.text = "".toEditable()
-                    }
+                val before = binding.password.text.toString()
+                if(before.equals("")){
+                   Toast.makeText(context, "Introduce una contraseña", Toast.LENGTH_LONG).show()
                 }
-                else {
 
-                    //OCULTANDO NOTA
-                    Log.d("aux", binding.textDecrypted.text.toString())
-                    val newContent = AESEncryptionDecryption().encrypt(context, binding.textDecrypted.text.toString(), password)
-                    notesViewModel.updateNote(currentItem.id, newContent)
-                    binding.password.text = "".toEditable()
-                    binding.BotonMostrar.text = "MOSTRAR NOTA"
-                    binding.textDecrypted.visibility = View.GONE
-                    binding.textDecrypted.text = "".toEditable()
+                else{
+                    val password = binding.password.text.toString().toCharArray()
+                    //MOSTRANDO NOTA
+                    if(binding.textDecrypted.visibility == View.GONE){
+                        val newContent =  currentItem.content
+                        Log.d("aux12", newContent.toString())
+                        val textDecrypted = AESEncryptionDecryption().decrypt(context, password, newContent)
 
-                    //comm = activity as Comunicator
-                    //comm.passDataCom(currentItem.id)
-                    //findNavController(binding.root).navigate(R.id.action_SecondFragment_to_passFragment)
+                        //password correct
+                        if (textDecrypted != null){
+                            //showing content decrypted
+                            binding.textDecrypted.text = textDecrypted.toEditable()
+                            binding.BotonMostrar.text = "GUARDAR"
+                            binding.textDecrypted.visibility = View.VISIBLE
+                        }
+
+                        else{
+                            binding.password.text = "".toEditable()
+                        }
+                    }
+                    else {
+
+                        //OCULTANDO NOTA
+                        val newContent = AESEncryptionDecryption().encrypt(context, binding.textDecrypted.text.toString(), password)
+                        notesViewModel.updateNote(currentItem.id, newContent)
+                        binding.password.text = "".toEditable()
+                        binding.BotonMostrar.text = "MOSTRAR NOTA"
+                        binding.textDecrypted.visibility = View.GONE
+                        binding.textDecrypted.text = "".toEditable()
 
 
+                   }
                 }
             }
 
