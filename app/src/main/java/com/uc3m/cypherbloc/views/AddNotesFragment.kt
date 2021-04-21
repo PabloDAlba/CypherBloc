@@ -4,21 +4,25 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.uc3m.cypherbloc.R
 import com.uc3m.cypherbloc.databinding.FragmentAddNotesBinding
+import com.uc3m.cypherbloc.models.AESEncryptionDecryption
 import com.uc3m.cypherbloc.models.Notes
 import com.uc3m.cypherbloc.viewModels.NotesViewModel
-import com.uc3m.cypherbloc.models.AESEncryptionDecryption
+import org.komputing.khash.keccak.Keccak
+import org.komputing.khash.keccak.KeccakParameter
+import org.komputing.khash.keccak.extensions.digestKeccak
 
- class AddNotesFragment : Fragment() {
+class AddNotesFragment : Fragment() {
 
     private lateinit var  binding: FragmentAddNotesBinding
     private lateinit var notesViewModel: NotesViewModel
@@ -41,6 +45,19 @@ import com.uc3m.cypherbloc.models.AESEncryptionDecryption
 
         binding.buttonCheckPassword.setOnClickListener{
             val pwd = binding.Password.toString()
+
+            val x1 = "1234".digestKeccak(KeccakParameter.KECCAK_512)
+            val x2 = Keccak.digest( "1234".toByteArray(), KeccakParameter.KECCAK_512)
+
+            Log.d("keccak1", x1.toString())
+            Log.d("keccak3", x2.toString())
+            ///
+            /*
+            Toast.makeText(context, x.toString(), Toast.LENGTH_LONG).show()
+            var url = "https://xposedornot.com/api/v1/pass/anon/" + x.toString()
+            URL(url).readText()
+            */
+
         }
 
         binding.buttonShowPassword.setOnClickListener{

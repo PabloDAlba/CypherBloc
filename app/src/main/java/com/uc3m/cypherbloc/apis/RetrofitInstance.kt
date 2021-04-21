@@ -14,7 +14,7 @@ object RetrofitInstance {
         val httpBuilder = OkHttpClient.Builder()
 
         val certificatePinner = CertificatePinner.Builder()
-            .add("https://xposedornot.com/api/v1/pass/anon/", "")
+            .add("https://xposedornot.com/api/v1/pass/anon/")
             .build()
 
         val okHttpClient = OkHttpClient.Builder()

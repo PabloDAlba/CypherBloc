@@ -51,6 +51,7 @@ dependencies {
 
     //Keccak
     implementation("com.ionspin.kotlin:bignum:0.3.0")
+    implementation("com.github.komputing.khash:keccak:1.1.0")
 
 
     //AES
@@ -101,3 +102,4 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     annotationProcessor 'androidx.room:room-compiler:2.2.6'
 }
+
