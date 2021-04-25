@@ -1,80 +1,76 @@
 package com.uc3m.cypherbloc.models
 
-import android.content.Context
-import android.util.Log
-import androidx.preference.PreferenceManager
-import android.widget.Toast
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.ObjectInputStream
-import java.io.ObjectOutputStream
-import java.security.spec.KeySpec
-import javax.crypto.Cipher
 //import javax.crypto.KeyGenerator
+import java.security.NoSuchAlgorithmException
+import java.security.spec.InvalidKeySpecException
+import javax.crypto.Cipher
 import javax.crypto.SecretKey
 import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.PBEKeySpec
 import javax.crypto.spec.SecretKeySpec
-import kotlin.system.exitProcess
 
 
 class AESEncryptionDecryption {
 
+    val salt = byteArrayOf(50, 111, 8, 53, 86, 35, -19, -47)
+    var data: MutableList<ByteArray> = mutableListOf()
 
-    fun encrypt(context: Context?, strToEncrypt: String, password: CharArray): ByteArray {
+
+    fun isExpectedPassword(pwdHash: ByteArray, expectedHash: ByteArray): Boolean {
+        if (pwdHash.size != expectedHash.size) return false
+        return pwdHash.indices.all { pwdHash[it] == expectedHash[it] }
+    }
+
+    fun hash(password: String): ByteArray {
+        val spec = PBEKeySpec(password.toCharArray(), salt, 65536, 256)
+        try {
+            val skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1")
+            return skf.generateSecret(spec).encoded
+        } catch (e: NoSuchAlgorithmException) {
+            throw AssertionError("Error while hashing a password: " + e.message, e)
+        } catch (e: InvalidKeySpecException) {
+            throw AssertionError("Error while hashing a password: " + e.message, e)
+        } finally {
+            spec.clearPassword()
+        }
+    }
+
+    fun encrypt(strToEncrypt: String, password: String): ByteArray {
 
         //Creating manual password  -> secret key
-
-        val salt = byteArrayOf(50, 111, 8, 53, 86, 35, -19, -47)
-
-        val factory: SecretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1")
-        val spec: KeySpec = PBEKeySpec(password, salt, 65536, 256)
-        val tmp: SecretKey = factory.generateSecret(spec)
-        val key: SecretKey = SecretKeySpec(tmp.encoded, "AES")
+        val passHash = hash(password)
+        val key: SecretKey = SecretKeySpec(passHash, "AES")
 
         var cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
         cipher.init(Cipher.ENCRYPT_MODE, key)
 
-        val iv = cipher.parameters.getParameterSpec(IvParameterSpec::class.java).iv
         val ciphertext = cipher.doFinal(strToEncrypt.toByteArray(charset("UTF-8")))
 
+        data.add(passHash)
+        data.add(cipher.iv)
 
-
-        // reinit cypher using param spec
-
-        cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
-        cipher.init(Cipher.DECRYPT_MODE, key, IvParameterSpec(iv))
-        val aux = cipher.doFinal(ciphertext)
-
-        saveSecretKey(context, key)
-        saveInitializationVector(context, cipher.iv)
-
-
+        //saveSecretKey(context, passHash)
+        //saveInitializationVector(context, cipher.iv)
 
         return ciphertext
-
     }
 
-    fun decrypt(context: Context, password: CharArray, dataToDecrypt: ByteArray): String? {
-        //transforming input password to SecretKey to compare
-        val salt = byteArrayOf(50, 111, 8, 53, 86, 35, -19, -47)
-        val factory: SecretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1")
-        val spec: KeySpec = PBEKeySpec(password, salt, 65536, 256)
-        val tmp: SecretKey = factory.generateSecret(spec)
-        val key: SecretKey = SecretKeySpec(tmp.encoded, "AES")
+    fun decrypt(password: String, dataToDecrypt: Notes): String? {
+        //transforming input password to hashPassword to compare
+        val keySaved2 = dataToDecrypt.pass
+        val pwdHash = hash(password)
+        if (!isExpectedPassword(pwdHash, keySaved2)) return null
 
-        //recovering saved SecretKey
+        //Creating key from hash password
+        val key: SecretKey = SecretKeySpec(pwdHash, "AES")
+
         val cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING")
-        val ivSpec = IvParameterSpec(getSavedInitializationVector(context))
+        val ivSpec = IvParameterSpec(dataToDecrypt.iv)
 
-        if (key != getSavedSecretKey(context)){
-            Toast.makeText(context, "Contraseña Erronea, pruebe de nuevo", Toast.LENGTH_LONG).show()
-            return null
-        }
         //Process init
         cipher.init(Cipher.DECRYPT_MODE, key, ivSpec)
-        val cipherText = cipher.doFinal(dataToDecrypt)
+        val cipherText = cipher.doFinal(dataToDecrypt.content)
 
         val sb = StringBuilder()
         for (b in cipherText) {
@@ -84,45 +80,4 @@ class AESEncryptionDecryption {
         return sb.toString()
     }
 
-    fun saveSecretKey(context: Context?, key: SecretKey) {
-        val baos = ByteArrayOutputStream()
-        val oos = ObjectOutputStream(baos)
-        oos.writeObject(key)
-        val strToSave =
-            String(android.util.Base64.encode(baos.toByteArray(), android.util.Base64.DEFAULT))
-        val sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
-        val editor = sharedPref.edit()
-        editor.putString("secret_key", strToSave)
-        editor.apply()
-    }
-
-    fun getSavedSecretKey(context: Context): SecretKey {
-        val sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
-        val strSecretKey = sharedPref.getString("secret_key", "")
-        val bytes = android.util.Base64.decode(strSecretKey, android.util.Base64.DEFAULT)
-        val ois = ObjectInputStream(ByteArrayInputStream(bytes))
-        val secretKey = ois.readObject() as SecretKey
-        return secretKey
-    }
-
-    fun saveInitializationVector(context: Context?, initializationVector: ByteArray) {
-        val baos = ByteArrayOutputStream()
-        val oos = ObjectOutputStream(baos)
-        oos.writeObject(initializationVector)
-        val strToSave =
-            String(android.util.Base64.encode(baos.toByteArray(), android.util.Base64.DEFAULT))
-        val sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
-        val editor = sharedPref.edit()
-        editor.putString("initialization_vector", strToSave)
-        editor.apply()
-    }
-
-    fun getSavedInitializationVector(context: Context): ByteArray {
-        val sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
-        val strInitializationVector = sharedPref.getString("initialization_vector", "")
-        val bytes = android.util.Base64.decode(strInitializationVector, android.util.Base64.DEFAULT)
-        val ois = ObjectInputStream(ByteArrayInputStream(bytes))
-        val initializationVector = ois.readObject() as ByteArray
-        return initializationVector
-    }
 }

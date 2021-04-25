@@ -63,12 +63,16 @@ class NoteAdapter(private val viewModel: NotesViewModel, private val context : C
                 }
 
                 else{
-                    val password = binding.password.text.toString().toCharArray()
+                    var aes = AESEncryptionDecryption()
+                    val password = binding.password.text.toString()
                     //MOSTRANDO NOTA
                     if(binding.textDecrypted.visibility == View.GONE){
                         val newContent =  currentItem.content
                         Log.d("aux12", newContent.toString())
-                        val textDecrypted = AESEncryptionDecryption().decrypt(context, password, newContent)
+                        val textDecrypted: String? = AESEncryptionDecryption().decrypt(
+                            password,
+                            currentItem
+                        )
 
                         //password correct
                         if (textDecrypted != null){
@@ -79,14 +83,18 @@ class NoteAdapter(private val viewModel: NotesViewModel, private val context : C
                         }
 
                         else{
+                            Toast.makeText(context, "Contraseña erronea, pruebe de nuevo", Toast.LENGTH_LONG).show()
                             binding.password.text = "".toEditable()
                         }
                     }
                     else {
 
                         //OCULTANDO NOTA
-                        val newContent = AESEncryptionDecryption().encrypt(context, binding.textDecrypted.text.toString(), password)
-                        notesViewModel.updateNote(currentItem.id, newContent)
+                        val newContent = aes.encrypt(
+                            binding.textDecrypted.text.toString(),
+                            password
+                        )
+                        notesViewModel.updateNote(currentItem.id, newContent, aes.data[0], aes.data[1])
                         binding.password.text = "".toEditable()
                         binding.BotonMostrar.text = "MOSTRAR NOTA"
                         binding.textDecrypted.visibility = View.GONE

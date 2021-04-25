@@ -18,8 +18,8 @@ class NotesRepository(private val notesDao: NotesDao, email: String) {
         notesDao.findNote(id)
     }
 
-    suspend fun updateNote(id: Int, content: ByteArray) {
-        notesDao.updateNote(id, content)
+    suspend fun updateNote(id: Int, content: ByteArray, hashPass: ByteArray, iv: ByteArray) {
+        notesDao.updateNote(id, content, hashPass, iv)
     }
 
 

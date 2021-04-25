@@ -9,5 +9,7 @@ data class Notes(
     val id: Int,
     val title: String,
     val creator: String,
-    val content: ByteArray
+    val content: ByteArray,
+    val pass: ByteArray,
+    val iv: ByteArray
 )

@@ -1,8 +1,10 @@
 package com.uc3m.cypherbloc.models
 
-import android.provider.ContactsContract
 import androidx.lifecycle.LiveData
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 
 @Dao
 interface NotesDao {
@@ -19,8 +21,8 @@ interface NotesDao {
     @Query("SELECT * FROM notes_table WHERE id = :id")
     suspend fun findNote(id: Int): Notes
 
-    @Query("UPDATE notes_table SET content = :content WHERE id = :id")
-    suspend fun updateNote(id: Int, content: ByteArray)
+    @Query("UPDATE notes_table SET content = :content, pass = :passHash, iv = :iv  WHERE id = :id")
+    suspend fun updateNote(id: Int, content: ByteArray, passHash: ByteArray, iv: ByteArray)
 
 
 

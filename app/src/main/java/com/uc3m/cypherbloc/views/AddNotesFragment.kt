@@ -4,17 +4,14 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebResourceRequest
 import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.common.util.Hex
 import com.google.firebase.auth.FirebaseAuth
@@ -23,13 +20,12 @@ import com.uc3m.cypherbloc.apis.XoNAPI
 import com.uc3m.cypherbloc.databinding.FragmentAddNotesBinding
 import com.uc3m.cypherbloc.models.AESEncryptionDecryption
 import com.uc3m.cypherbloc.models.Notes
-import com.uc3m.cypherbloc.models.XoN
 import com.uc3m.cypherbloc.models.XoNAux
 import com.uc3m.cypherbloc.utils.Constants
 import com.uc3m.cypherbloc.viewModels.NotesViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.CertificatePinner
 import okhttp3.OkHttpClient
 import org.komputing.khash.keccak.KeccakParameter
@@ -67,19 +63,24 @@ class AddNotesFragment : Fragment() {
             val x1 = pwd.digestKeccak(KeccakParameter.KECCAK_512)
             val hex1 = Hex.bytesToStringLowercase(x1)
 
-            searchPass(hex1.substring(0,10))
+            lifecycleScope.launch {
+                searchPass(hex1.substring(0, 10))
 
-            if(myCount == 0) {
-                Toast.makeText(requireContext(), "Tu contraseña es segura", Toast.LENGTH_SHORT).show()
+                if (myCount == 0) Toast.makeText(
+                    requireContext(),
+                    "Tu contraseña es segura",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                if (myCount == 1) {
+                    Toast.makeText(
+                        requireContext(), "Tu contraseña no es segura, prueba con otra distinta",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
                 myCount = -1
             }
-            if(myCount == 1) {
-                Toast.makeText(requireContext(), "Tu contraseña no es segura, prueba con otra distinta", Toast.LENGTH_SHORT).show()
-                myCount = -1
-            }
-
-
-        }
+        } //fin listener
 
         binding.buttonShowPassword.setOnClickListener {
             if (binding.buttonShowPassword.text.toString().equals("Show")) {
@@ -105,16 +106,15 @@ class AddNotesFragment : Fragment() {
     }
 
     private fun insertDataToDatabase() {
-        val password = binding.Password.text.toString().toCharArray()
-        val auxPass = password.toString()
+        var aes = AESEncryptionDecryption()
+        val password = binding.Password.text.toString()
         val nombreNota = binding.NombreNota.text.toString()
         val creadorNota = auth.currentUser?.email.toString()
         val AuxcontenidoNota = binding.ContenidoNota.text.toString()
 
-        if (inputCheck(nombreNota, creadorNota, AuxcontenidoNota, auxPass)) {
-            val contenidoNota =
-                AESEncryptionDecryption().encrypt(context, AuxcontenidoNota, password)
-            val note = Notes(0, nombreNota, creadorNota, contenidoNota)
+        if (inputCheck(nombreNota, creadorNota, AuxcontenidoNota, password)) {
+            val contenidoNota = aes.encrypt(AuxcontenidoNota, password)
+            val note = Notes(0, nombreNota, creadorNota, contenidoNota, aes.data[0], aes.data[1])
             notesViewModel.addNote(note)
             Toast.makeText(requireContext(), "Nota creada con exito", Toast.LENGTH_LONG).show()
             findNavController().navigate(R.id.action_addNotesFragment2_to_SecondFragment)
@@ -155,16 +155,18 @@ class AddNotesFragment : Fragment() {
     }
 
     private fun searchPass(query: String) {
-        CoroutineScope(Dispatchers.IO).launch {
+        lifecycleScope.launch {
             val call: Response<XoNAux> =
                 getRetrofit().create(XoNAPI::class.java).CheckPass("$query")
-                if(call.isSuccessful) myCount = 1
-                else myCount = 0
-
+            withContext(Dispatchers.IO){
+                myCount = if(call.isSuccessful) 1
+                else 0
             }
-
         }
+
     }
+
+}
 
 
 

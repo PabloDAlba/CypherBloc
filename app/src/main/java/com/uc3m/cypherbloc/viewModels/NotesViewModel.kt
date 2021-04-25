@@ -43,9 +43,9 @@ class NotesViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
-    fun updateNote(id: Int, content: ByteArray) {
+    fun updateNote(id: Int, content: ByteArray, hashPass: ByteArray, iv: ByteArray) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.updateNote(id, content)
+            repository.updateNote(id, content, hashPass, iv)
         }
     }
 
