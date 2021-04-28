@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,28 +12,16 @@ import android.webkit.WebView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.common.util.Hex
 import com.google.firebase.auth.FirebaseAuth
 import com.uc3m.cypherbloc.R
-import com.uc3m.cypherbloc.apis.XoNAPI
 import com.uc3m.cypherbloc.databinding.FragmentAddNotesBinding
 import com.uc3m.cypherbloc.models.AESEncryptionDecryption
 import com.uc3m.cypherbloc.models.Notes
-import com.uc3m.cypherbloc.models.XoNAux
-import com.uc3m.cypherbloc.utils.Constants
 import com.uc3m.cypherbloc.viewModels.NotesViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.CertificatePinner
-import okhttp3.OkHttpClient
 import org.komputing.khash.keccak.KeccakParameter
 import org.komputing.khash.keccak.extensions.digestKeccak
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class AddNotesFragment : Fragment() {
 
@@ -62,24 +51,23 @@ class AddNotesFragment : Fragment() {
             val pwd = binding.Password.text.toString()
             val x1 = pwd.digestKeccak(KeccakParameter.KECCAK_512)
             val hex1 = Hex.bytesToStringLowercase(x1)
+            val query = hex1.substring(0 ,10)
+            Log.d("keccak", query)
 
-            lifecycleScope.launch {
-                searchPass(hex1.substring(0, 10))
+            notesViewModel.searchPass(query)
 
-                if (myCount == 0) Toast.makeText(
-                    requireContext(),
-                    "Tu contraseña es segura",
-                    Toast.LENGTH_SHORT
-                ).show()
+            notesViewModel.myResponse.observe(viewLifecycleOwner, { response ->
+                Log.d("http body", response.body().toString())
+                Log.d("http code", response.code().toString())
+                Log.d("http headers", response.headers().toString())
+                Log.d("http message", response.message())
+                Log.d("http error body", response.errorBody().toString())
+                if(response.isSuccessful) Toast.makeText(requireContext(), "Contraseña insegura, prueba otra", Toast.LENGTH_LONG).show()
+                else Toast.makeText(requireContext(), "Contraseña segura", Toast.LENGTH_LONG).show()
 
-                if (myCount == 1) {
-                    Toast.makeText(
-                        requireContext(), "Tu contraseña no es segura, prueba con otra distinta",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                myCount = -1
-            }
+            })
+
+
         } //fin listener
 
         binding.buttonShowPassword.setOnClickListener {
@@ -133,37 +121,6 @@ class AddNotesFragment : Fragment() {
         return !(TextUtils.isEmpty(nombreNota) || TextUtils.isEmpty(creadorNota) || TextUtils.isEmpty(
             contenidoNota
         ) || TextUtils.isEmpty(auxPass))
-    }
-
-    private fun getRetrofit(): Retrofit {
-        val certificatePinner = CertificatePinner.Builder()
-            .add("https://xposedornot.com/api/v1/pass/anon/")
-            .build()
-
-        //Este sería el pin para el certificado, pero al no ser una URL fija no sabemos bien como hacerlo de esta manera
-        //PcIiExMyjUj9Dt9n0LFGwIzVwwoxcMryiWILZhUZ6as=
-
-        val okHttpClient = OkHttpClient.Builder()
-            .certificatePinner(certificatePinner)
-            .build()
-
-        return Retrofit.Builder()
-            .baseUrl(Constants.XoNAPI_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(okHttpClient)
-            .build()
-    }
-
-    private fun searchPass(query: String) {
-        lifecycleScope.launch {
-            val call: Response<XoNAux> =
-                getRetrofit().create(XoNAPI::class.java).CheckPass("$query")
-            withContext(Dispatchers.IO){
-                myCount = if(call.isSuccessful) 1
-                else 0
-            }
-        }
-
     }
 
 }

@@ -10,4 +10,5 @@ interface XoNAPI {
     @GET
     suspend fun CheckPass(@Url url: String): Response<XoNAux>
 
+
 }

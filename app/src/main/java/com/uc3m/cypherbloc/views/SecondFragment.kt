@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.uc3m.cypherbloc.R
 import com.uc3m.cypherbloc.databinding.FragmentSecondBinding
+import com.uc3m.cypherbloc.repository.Repository
 import com.uc3m.cypherbloc.viewModels.NotesViewModel
 
 
@@ -35,6 +36,8 @@ class SecondFragment : Fragment() {
 
         auth = FirebaseAuth.getInstance()
         val currentUser = auth.currentUser
+
+        val repo: Repository
 
 
         binding.user.text = currentUser?.displayName
